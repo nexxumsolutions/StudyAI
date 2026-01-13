@@ -2,7 +2,6 @@ import openai
 import os
 import streamlit as st
 
-# Load your OpenAI API key safely from Streamlit secrets
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 st.title("StudyAI - Your Study Assistant")
