@@ -1,31 +1,25 @@
 import openai
-
-# Paste your API key inside the quotes
-openai.api_key = import openai
 import os
 import streamlit as st
 
-# Get API key from environment variable (safe
+# Correct way to load API key from Streamlit secret
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
+st.title("StudyAI - Your Study Assistant")
 
-def ask_ai(question):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a kind and helpful study tutor."},
-            {"role": "user", "content": question}
-        ]
-    )
-    return response.choices[0].message.content
+question = st.text_input("Enter a topic or question:")
 
-def main():
-    print("Welcome to StudyAI!")
-    while True:
-        topic = input("Enter a topic or question (or type 'exit'): ")
-        if topic.lower() == "exit":
-            break
-        answer = ask_ai(topic)
-        print("\nAI Answer:\n", answer)
-
-if __name__ == "__main__":
-    main()
+if st.button("Ask AI"):
+    if question:
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful study tutor."},
+                    {"role": "user", "content": question}
+                ]
+            )
+            answer = response.choices[0].message.content
+            st.write("**AI Answer:**", answer)
+        except Exception as e:
+            st.write("⚠️ Error:", e)
